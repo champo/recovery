@@ -46,11 +46,11 @@ jobs:
           outputs: bin
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args:
-            - cc: ${{ matrix.cc }}
-            - os: ${{ matrix.os }}
-            - arch: ${{ matrix.arch }}
-            - out: ${{ matrix.out }}
+          build-args: |
+            cc=${{ matrix.cc }}
+            os=${{ matrix.os }}
+            arch=${{ matrix.arch }}
+            out=${{ matrix.out }}
 
       - name: Upload APK
         uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
