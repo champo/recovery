@@ -45,7 +45,7 @@ jobs:
           context: .
           outputs: bin
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
           build-args: |
             cc=${{ matrix.target.cc }}
             os=${{ matrix.target.os }}
