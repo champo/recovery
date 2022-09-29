@@ -13,6 +13,8 @@ jobs:
         arch: [amd64, arm64]
 
     runs-on: ${{ matrix.os }}
+    env:
+      out: recovery-tool-${{ matrix.os }}-${{ matrix.arch }}
     steps:
       - name: Checkout
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
@@ -31,13 +33,13 @@ jobs:
           CGO_ENABLED=1 \
           GOOS=darwin \
           GOARCH=${{ matrix.arch }} \
-          go build -mod=vendor -a -trimpath -o bin/recovery-tool .
+          go build -mod=vendor -a -trimpath -o bin/${{ env.out }}
 
       - name: Upload binary
         uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
         with:
-          name: recovery-tool-${{ matrix.os }}-${{ matrix.arch }}
-          path: bin/recovery-tool
+          name: ${{ env.out }}
+          path: bin/${{ env.out }}
 
   pr:
     runs-on: ubuntu-22.04
