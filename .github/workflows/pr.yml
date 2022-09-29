@@ -3,9 +3,10 @@ on:
   push:
     branch: actions
 jobs:
-  pr-mac-12:
+  pr-mac:
 
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-12, macos-11]
         arch: [amd64, arm64]
@@ -26,6 +27,7 @@ jobs:
 
       - name: Build
         run: |
+          CGO_ENABLED=1 \
           GOOS=darwin \
           GOARCH=${{ matrix.arch }} \
           go build -mod=vendor -a -trimpath -o bin/recovery-tool .
@@ -90,3 +92,20 @@ jobs:
         with:
           name: ${{ matrix.target.out }}
           path: bin/${{ matrix.target.out }}
+
+  release:
+    runs-on: ubuntu-22.04
+    needs: [pr-mac, pr]
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+        
+      - name: Release
+        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            artifacts/*/*
