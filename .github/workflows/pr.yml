@@ -2,6 +2,7 @@ name: pr
 on:
   push:
     branch: actions
+    tags: v*
 jobs:
   pr-mac:
 
